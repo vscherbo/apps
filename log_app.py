@@ -12,7 +12,8 @@ class LogApp():
     #log_format = '[%(filename)-21s:%(lineno)4s - %(funcName)20s()] \
     #        %(levelname)-7s | %(asctime)-15s | %(message)s'
 
-    def __init__(self, args, description='Logging application'):
+    #def __init__(self, args, description='Logging application'):
+    def __init__(self, args):
         self.args = args
         self.config = None
         logging.getLogger(__name__).addHandler(logging.NullHandler())
@@ -39,7 +40,7 @@ class LogApp():
         if self.args.conf:
             logging.info('Config %s reading', self.args.conf)
             conf_name = self.args.conf
-        self.config.read(conf_name)
+        self.config.read(conf_name, encoding='utf-8')
 
 
 CONF_FILE_NAME = ""
