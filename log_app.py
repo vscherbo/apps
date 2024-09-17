@@ -2,10 +2,11 @@
 """ A template of a logging application
 """
 
-import sys
-import logging
 import argparse
 import configparser
+import logging
+import sys
+
 
 class LogApp():
     """ A logging application """
