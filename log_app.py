@@ -21,7 +21,7 @@ class LogApp():
         logging.getLogger(__name__).addHandler(logging.NullHandler())
         numeric_level = getattr(logging, self.args.log_level, None)
         if not isinstance(numeric_level, int):
-            raise ValueError('Invalid log level: %s' % numeric_level)
+            raise ValueError(f'Invalid log level: {numeric_level}')
 
         self.set_log_format()
         if self.args.log_file == 'stdout':
@@ -35,14 +35,21 @@ class LogApp():
         """ Set logging format """
         self.log_format = log_format
 
-    def get_config(self, conf_name='', allow_no_value=True):
+    # def read_conf(self, **kwargs
+
+    def get_config(self, conf_name='', **kwargs):
         """ initialize and read config """
-        self.config = configparser.ConfigParser(allow_no_value=allow_no_value)
-        #logging.info('Config "%s" reading', self.args.conf)
         if self.args.conf:
             logging.info('Config %s reading', self.args.conf)
             conf_name = self.args.conf
-        self.config.read(conf_name, encoding='utf-8')
+
+        # self.read_conf(
+
+        self.config = configparser.ConfigParser(**kwargs)
+        try:
+            self.config.read(conf_name, encoding='utf-8')
+        except configparser.Error:
+            logging.exception('configparser.Error')
 
 
 CONF_FILE_NAME = ""
@@ -50,3 +57,12 @@ PARSER = argparse.ArgumentParser()
 PARSER.add_argument('--conf', type=str, default=CONF_FILE_NAME, help='conf file')
 PARSER.add_argument('--log_file', type=str, default='stdout', help='log destination')
 PARSER.add_argument('--log_level', type=str, default="DEBUG", help='log level')
+
+if __name__ == '__main__':
+    ARGS = PARSER.parse_args()
+    LOGAPP = LogApp(args=ARGS)
+    LOGAPP.get_config(inline_comment_prefixes=(';','#'), allow_no_value=True)
+    # logging.debug('config=%s', LOGAPP.config.sections())
+    for SEC in LOGAPP.config.sections():
+        for OPT in LOGAPP.config.options(SEC):
+            logging.debug('section=%s, option=%s, val=%s', SEC, OPT, LOGAPP.config[SEC][OPT])
