@@ -5,7 +5,10 @@
 import argparse
 import configparser
 import logging
+import os
 import sys
+
+import __main__
 
 
 class LogApp():
@@ -35,15 +38,16 @@ class LogApp():
         """ Set logging format """
         self.log_format = log_format
 
-    # def read_conf(self, **kwargs
-
     def get_config(self, conf_name='', **kwargs):
         """ initialize and read config """
         if self.args.conf:
             logging.info('Config %s reading', self.args.conf)
             conf_name = self.args.conf
+        else:
+            (prg_name, prg_ext) = os.path.splitext(os.path.basename(__main__.__file__))
+            logging.info('prg_name=%s, prg_ext=%s', prg_name, prg_ext)
+            conf_name = prg_name +".conf"
 
-        # self.read_conf(
 
         self.config = configparser.ConfigParser(**kwargs)
         try:
