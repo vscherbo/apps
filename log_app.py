@@ -44,6 +44,8 @@ class LogApp():
         if self.args.conf:
             logging.info('Config %s reading', self.args.conf)
             self.conf_name = self.args.conf
+        elif conf_name != '':
+            self.conf_name = conf_name
         else:
             (prg_name, prg_ext) = os.path.splitext(os.path.basename(__main__.__file__))
             logging.info('prg_name=%s, prg_ext=%s', prg_name, prg_ext)
@@ -51,7 +53,7 @@ class LogApp():
 
         self.config = configparser.ConfigParser(**kwargs)
         try:
-            self.config.read(conf_name, encoding='utf-8')
+            self.config.read(self.conf_name, encoding='utf-8')
         except configparser.Error:
             logging.exception('configparser.Error')
 
