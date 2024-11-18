@@ -20,6 +20,7 @@ class LogApp():
     #def __init__(self, args):
         self.args = args
         self.description = description
+        self.conf_name = None
         self.config = None
         logging.getLogger(__name__).addHandler(logging.NullHandler())
         numeric_level = getattr(logging, self.args.log_level, None)
@@ -42,12 +43,11 @@ class LogApp():
         """ initialize and read config """
         if self.args.conf:
             logging.info('Config %s reading', self.args.conf)
-            conf_name = self.args.conf
+            self.conf_name = self.args.conf
         else:
             (prg_name, prg_ext) = os.path.splitext(os.path.basename(__main__.__file__))
             logging.info('prg_name=%s, prg_ext=%s', prg_name, prg_ext)
-            conf_name = prg_name +".conf"
-
+            self.conf_name = prg_name +".conf"
 
         self.config = configparser.ConfigParser(**kwargs)
         try:
